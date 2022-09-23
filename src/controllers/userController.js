@@ -1,6 +1,6 @@
 import userModel from "../models/userModel.js";
 import jwt from "jsonwebtoken";
-
+import bcrypt from 'bcrypt';
 import {
   isValidBody,
   isValidEnum,
@@ -73,8 +73,12 @@ const createUser = async (req, res) => {
     if (!password)
       return res.status(400).send({ status: false, message: "password is  mandatory" });
 
-    if (!isValidPwd(password))
-      return res.status(400).send({ status: false, message: "Password should be minLen 8, maxLen 15 & must contain one of 0-9,A-Z,a-z & special char" });
+    // if (!isValidPwd(password))
+    //   return res.status(400).send({ status: false, message: "Password should be minLen 8, maxLen 15 & must contain one of 0-9,A-Z,a-z & special char" });
+
+     let saltRounds=10
+      const hash = bcrypt.hashSync(password, saltRounds);
+     reqBody.password = hash
 
     const result = await userModel.create(reqBody);
 

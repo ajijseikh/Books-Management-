@@ -33,21 +33,20 @@ const addReview = async (req, res) => {
         if (!reviewedAt)
             return res.status(400).send({ status: false, message: `The reviewedAt Field is Required` })
 
-        // if (!isValidDate(reviewedAt))
         if (!isValidRevDate(reviewedAt))
-            return res.status(400).send({ status: false, message: `Please follow this date 'YYYY-MM-DD formate'` })
+            return res.status(400).send({ status: false, message: `Your date ${reviewedAt} doest follow this date 'YYYY-MM-DD formate'` })
+
+        if (rating == 0 || rating == " ")
+             return res.status(400).send({ status: false, message: `The Rating Field cant be 0  or Empty` })
 
         if (!rating)
             return res.status(400).send({ status: false, message: `The Rating Field is Required` })
 
-            // if (rating.value == 0) Object.keys(reqBody).length > 8 
-            // return res.status(400).send({ status: false, message: `The Rating Field cant be 0 ` })
-
-        if (!review)
-            return res.status(400).send({ status: false, message: `The review Field is Required` })
-
         if (isValidRating(rating))
-            return res.status(400).send({ status: false, message: `The review rating should be 1 to 5)` })
+            return res.status(400).send({ status: false, message: `The review rating should be 1 to 5` })
+
+            if (!review)
+            return res.status(400).send({ status: false, message: `The review Field is Required` })
 
         datas.bookId = id
         let result = await reviewModel.create(datas)

@@ -13,13 +13,15 @@ const authentication = async (req, res, next) => {
         const decodedToken = jwt.verify(token, 'group56')
 
         if (!decodedToken)
-            return res.status(400).send({ status: false, message: 'Provide your own token' })
+            return res.status(401).send({ status: false, message: 'Authentication Failed!!!' })
 
         req.user = decodedToken
 
         next()
     }
     catch (err) {
+        if(err.message == "invalid token") return res.status(400).send({status: false, message: "Token is invalid"})
+        if(err.message == "invalid signature") return res.status(400).send({status: false, message: " Invalid signature in the Token"})
         res.status(500).send({ status: false, error: err.message })
     }
 }
@@ -28,7 +30,7 @@ const authentication = async (req, res, next) => {
 const authorization = async (req, res, next) => {
     try {
         const bookId = req.params.bookId
-        console.log(bookId)
+        
 
         if (!isValidObjectId(bookId))
             return res.status(400).send({ status: false, message: `This ${bookId} bookId is Invalid` });
@@ -39,24 +41,28 @@ const authorization = async (req, res, next) => {
             return res.status(400).send({ status: false, message: 'Token must be present' })
 
         const decodedToken = jwt.verify(token, 'group56')
-        console.log(decodedToken.userId)
+    
         
         if (!decodedToken)
             return res.status(400).send({ status: false, message: 'Provide your own token' })
         
         const book = await bookModel.findById(bookId)
-        console.log(book)
-        console.log(book.userId)
-        
+
         
         if (decodedToken.userId != book.userId)
-            return res.status(400).send({ status: false, message: 'You are not authorized' })
+            return res.status(403).send({ status: false, message: 'You are not authorized' })
 
         next()
     }
     catch (err) {
         res.status(500).send({ status: false, error: err.message })
+
     }
 }
 
 export { authentication, authorization }
+
+//need to handel
+// "status": false,
+//     "error": "invalid signature"
+// }
