@@ -39,14 +39,14 @@ const isValidTitleEnum = (title) => {
 
 //---------------------------------------validText-------------------------------------------
 const isValidText = (text) => {
-    if (typeof text == "string" && text.trim().length != 0 && text.match(/^[a-zA-Z.]{2,}$/i))
+    if (typeof text == "string" && text.trim().length != 0 && text.match(/^[a-z A-Z.]{2,}$/i))
         return true
     return false
 }
 
 //----------------------------------------name--------------------------------------------
 const isValidName = (name) => {
-    if ((typeof name == "String" && name.trim().length != 0 || name.match(/^[A-Za-z]{2,}$/)))
+    if ((typeof name == "String" && name.trim().length != 0 || name.match(/^[A-Z a-z.]{2,}$/)))
         return true
     return false
 };

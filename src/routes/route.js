@@ -4,8 +4,8 @@ const router = express.Router()
 import { createUser, userLogin } from '../controllers/userController.js'
 import { createBook, getBooks, getBookById, updateBookById, deleteBookById } from '../controllers/bookController.js'
 import { addReview, updateReview, deleteReview } from '../controllers/reviewController.js'
-
-
+import {authentication,authorization} from "../middleware/auth.js"
+ 
 // User API
 router.post('/register', createUser)
 router.post('/login', userLogin)
