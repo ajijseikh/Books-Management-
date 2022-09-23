@@ -2,7 +2,7 @@ import validate from 'validator'
 import bookModel from '../models/bookModel.js'
 import reviewModel from '../models/reviewModel.js'
 import { isValidRevDate } from '../util/reviewValidate.js'
-import { dataValidation, isValidObjectId, isValidName, isValidRating, isValidDate, } from '../util/bookValidate.js'
+import { dataValidation, isValidObjectId, isValidName, isValidRating, isValidDate} from '../util/bookValidate.js'
 
 //POST /books/:bookId/review
 //By Richard
@@ -190,9 +190,5 @@ const deleteReview = async (req, res) => {
         res.status(500).send({ status: false, message: err.message });
     }
 }
-
-
-
-
 
 export { addReview, updateReview, deleteReview }

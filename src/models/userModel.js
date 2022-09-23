@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema(
         name: { type: String, required: 'Book Name Required', trim: true },
         phone: { type: String, required: 'Book Phone Required', trim: true },
         email: { type: String, required: 'Book Email Required', unique: true, trim: true },  //valid email
-        password: { type: String, required: 'Book Password Required',  trim: true },
+        password: { type: String, required: 'Book Password Required', minlength: 8, maxlength: 15, trim: true },
         address: {
             street: { type: String, required: 'Book Street Required', trim: true },
             city: { type: String, required: 'Book City Required', trim: true },

@@ -2,7 +2,7 @@ import express from 'express'
 const router = express.Router()
 
 import { createUser, userLogin } from '../controllers/userController.js'
-import { createBook, getBooks, getBookById, updateBookById, deleteBookById } from '../controllers/bookController.js'
+import { createBook, getBooksQuery, getBookById, updateBookById, deleteBookById } from '../controllers/bookController.js'
 import { addReview, updateReview, deleteReview } from '../controllers/reviewController.js'
 import{authentication,authorization} from '../middleware/auth.js'
 
@@ -12,7 +12,7 @@ router.post('/login', userLogin)
 
 //Book API
 router.post('/books', authentication,createBook)
-router.get('/books',authentication,getBooks)
+router.get('/books',authentication,getBooksQuery)
 router.get('/books/:bookId',authentication, getBookById)
 router.put("/books/:bookId",authentication,authorization, updateBookById)
 router.delete('/books/:bookId', authentication,authorization,deleteBookById)
