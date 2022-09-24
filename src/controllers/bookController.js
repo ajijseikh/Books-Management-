@@ -159,9 +159,8 @@ const getBookById = async (req, res) => {
 }
 
 
-//========================================= book/put =========================================================================>
-
-
+//=======================put api ========================================================>
+//
 const updateBookById = async (req, res) => {
   try {
     const bookId = req.params.bookId;
@@ -189,68 +188,94 @@ const updateBookById = async (req, res) => {
         .status(400)
         .send({ status: false, message: "Please Provide Details for Update" });
 
-    const { title, excerpt, releasedAt, ISBN } = reqBody;
+    let  { title, excerpt, releasedAt, ISBN } = reqBody;
 console.log(title);
     const bookObject = {};
 
-    if (title.trim().length === 0 || !title)
-      return res
-        .status(400)
-        .send({ status: false, message: "Please Enter title" });
-         
-    const trimmedTitle = title.trim().split(" ").filter(word=>word).join(" ");
-
-    const isTitleExist = await bookModel.findOne({ title: trimmedTitle });
+    
+      if (title) {
+        if (title.length === 0 || !title)
+          return res
+            .status(400)
+            .send({
+              status: false,
+              message: "Please Enter title"
+            });
+        
+      
+     title = title.trim().split(" ").filter(word=>word).join(" ");
+     bookObject.title = title
+     console.log(title)
+      }
+    const isTitleExist = await bookModel.findOne({ title: title });
 
     if (isTitleExist)
       return res
         .status(409)
         .send({ status: false, message: "Title  already exists" });
+      
+    
 
-    bookObject.title = trimmedTitle;
-
-    if (excerpt.length == 0 || !excerpt)
-      return res
-        .status(400)
-        .send({ status: false, message: "Please Enter excerpt" });
-
-    bookObject.excerpt = excerpt.trim().split(" ").filter(word => word).join(" ");
-
-    if (ISBN.length == 0 || !ISBN)
-      return res
-        .status(400)
-        .send({ status: false, message: "Please Enter ISBN" });
-      if (!isValidIsbn(ISBN))
-        return res
-          .status(400)
-          .send({
-            status: false,
-            message: "ISBN isn't valid"
-          });
-    const trimmedISBN = ISBN.trim();
-
-    const isIsbnExist = await bookModel.findOne({ ISBN: trimmedISBN });
+   if (excerpt) {
+     excerpt = excerpt.trim().split(" ").filter(word => word).join(" ");
+     if (excerpt.length == 0)
+       return res
+         .status(400)
+         .send({
+           status: false,
+           message: "Please Enter excerpt"
+         });
+        bookObject.excerpt=excerpt
+   };
+   
+     
+   
+     if (ISBN) {
+      
+         if (ISBN.length == 0)
+           return res
+             .status(400)
+             .send({
+               status: false,
+               message: "Please Enter ISBN"
+               });
+                if (!isValidIsbn(ISBN.trim()))
+                  return res
+                    .status(400)
+                    .send({
+                      status: false,
+                      message: "ISBN isn't valid"
+                    });
+                     bookObject.ISBN = ISBN.trim();
+             
+     }
+    const isIsbnExist = await bookModel.findOne({ ISBN: ISBN });
 
     if (isIsbnExist)
       return res
         .status(409)
         .send({ status: false, message: "ISBN already exists" });
 
-    bookObject.ISBN = trimmedISBN;
-
-    if (!releasedAt || releasedAt.length==0)
-      return res
-        .status(400)
-
-        .send({ status: false, message: "Enter Date in YYYY-MM-DD format!!!" });
-
-    if (!/^((\d{4}[\/-])(\d{2}[\/-])(\d{2}))$/.test(releasedAt))
-      return res
-        .status(400)
-        .send({ status: false, message: "Enter Date in YYYY-MM-DD format!!!" });
     
+    if (releasedAt){
 
-    bookObject.releasedAt = releasedAt.trim();
+        releasedAt = releasedAt.trim();
+      if (!isValidRevDate(releasedAt))
+        return res
+          .status(400)
+          .send({
+            status: false,
+            message: "Enter Date in YYYY-MM-DD format!!!"
+          });
+          if (releasedAt.length==0)
+            return res
+              .status(400)
+
+              .send({ status: false, message: "Enter Date in YYYY-MM-DD format!!!" });
+
+
+      bookObject.releasedAt=releasedAt
+    }
 
     const updatedBookDetail = await bookModel.findOneAndUpdate(
       { _id: book._id },
@@ -262,8 +287,8 @@ console.log(title);
       .status(200)
       .send({ status: true, message: "Success", data: updatedBookDetail });
   } catch (err) {
-    return res.status(500).send({ status: false, message: err.message });
-  }
+    return res.status(500).send({ status: false, message: err.message });
+  }
 };
 
 
