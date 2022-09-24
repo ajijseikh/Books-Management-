@@ -2,7 +2,7 @@ import bookModel from '../models/bookModel.js'
 import userModel from '../models/userModel.js'
 import reviewModel from '../models/reviewModel.js'
 
-import { dataValidation, isValidObjectId, isValidText, isValidName, isValidIsbn, isValidDate, } from '../util/bookValidate.js'
+import { dataValidation,isValidTitle, isValidObjectId, isValidText,isValidDate,isTitleAny, isValidName, isValidIsbn } from '../util/bookValidate.js'
 
 // -------------------------------------------createBook---------------------------------------------
 const createBook = async (req, res) => {
@@ -21,8 +21,11 @@ const createBook = async (req, res) => {
     if (!title)
       return res.status(400).send({ status: false, message: 'title isn\'t present' })
 
-    if (!isValidText(title))
+    if (!isTitleAny(title))
       return res.status(400).send({ status: false, message: 'title isn\'t valid' })
+
+      if(isValidTitle(title))
+      return res.status(400).send({ status: false, message: 'First Char of title should be in Uppercase' })
 
     //------------------------------excerpt validation-----------------------------------
     if (!isValidText(excerpt))
@@ -189,7 +192,7 @@ const updateBookById = async (req, res) => {
         .send({ status: false, message: "Please Provide Details for Update" });
 
     let  { title, excerpt, releasedAt, ISBN } = reqBody;
-console.log(title);
+
     const bookObject = {};
 
     
@@ -205,7 +208,7 @@ console.log(title);
       
      title = title.trim().split(" ").filter(word=>word).join(" ");
      bookObject.title = title
-     console.log(title)
+    
       }
     const isTitleExist = await bookModel.findOne({ title: title });
 
@@ -260,13 +263,8 @@ console.log(title);
     if (releasedAt){
 
         releasedAt = releasedAt.trim();
-      if (!isValidRevDate(releasedAt))
-        return res
-          .status(400)
-          .send({
-            status: false,
-            message: "Enter Date in YYYY-MM-DD format!!!"
-          });
+        if (!isValidDate(releasedAt))
+        return res.status(400).send({ status: false, message: 'Please use \'YYYY-MM-DD\' this format' });
           if (releasedAt.length==0)
             return res
               .status(400)
