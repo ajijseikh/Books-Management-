@@ -96,8 +96,7 @@ const isValidTitle = (title)=>{
 if (firstChar == firstChar.toUpperCase()) 
 return false
 return true
-    // it is capital :D
-
+    
 
 }
 
