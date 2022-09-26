@@ -1,6 +1,6 @@
 import userModel from "../models/userModel.js";
 import jwt from "jsonwebtoken";
-
+import bcrypt from 'bcrypt';
 import {
   isValidBody,
   isValidEnum,
@@ -43,7 +43,6 @@ const createUser = async (req, res) => {
 
       if (uniquePhoneNo)
         return res.status(400).send({ status: false, message: "PhoneNo should be  unique" });
-  
 
     if (!phone)
       return res.status(400).send({ status: false, message: "Phone is  mandatory" });
@@ -75,7 +74,11 @@ const createUser = async (req, res) => {
       return res.status(400).send({ status: false, message: "password is  mandatory" });
 
     if (!isValidPwd(password))
-      return res.status(400).send({ status: false, message: "Password should be minLen 8, maxLen 15 long and must contain one of 0-9,A-Z,a-z & special char" });
+      return res.status(400).send({ status: false, message: "Password should be minLen 8, maxLen 15 & must contain one of 0-9,A-Z,a-z & special char" });
+
+    //  let saltRounds=10
+    //  const hash = bcrypt.hashSync(password, saltRounds);
+    //  reqBody.password = hash
 
     const result = await userModel.create(reqBody);
 
@@ -103,7 +106,7 @@ const userLogin = async (req, res) => {
       return res.status(400).send({ status: false, msg: "Password Required." });
 
     if (!isValidEmail(email))
-      return res.status(400).send({ status: false, msg: `your Email-Id ${email}is invalid` });
+      return res.status(400).send({ status: false, msg: `your Email-Id ${email} is invalid` });
 
     if (!isValidPwd(password))
       return res.status(400).send({ status: false, essage: "Password should be minLen 8, maxLen 15 long and must contain one of 0-9,A-Z,a-z & special char", });
@@ -114,7 +117,7 @@ const userLogin = async (req, res) => {
       return res.status(401).send({ status: false, message: "Authentication failed!!!, Incorrect Email or Password !!!" });
 
     const payload = { userId: user._id, iat: Math.floor(Date.now() / 1000) };
-    const token = jwt.sign(payload, "Room 56", { expiresIn: "10m" });
+    const token = jwt.sign(payload, "group56", { expiresIn: "24h" });
 
     return res.status(200).send({ status: true, message: "Login Successfully", token: token, exp: payload.exp, });
 

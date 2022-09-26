@@ -39,21 +39,21 @@ const isValidTitleEnum = (title) => {
 
 //---------------------------------------validText-------------------------------------------
 const isValidText = (text) => {
-    if (typeof text == "string" && text.trim().length != 0 && text.match(/^[a-z A-Z.]{2,}$/i))
+    if (typeof text == "string" && text.trim().length != 0 && text.match(/^[a-z A-Z 0-9,.?]{2,}$/i))
         return true
     return false
 }
 
 //----------------------------------------name--------------------------------------------
 const isValidName = (name) => {
-    if ((typeof name == "String" && name.trim().length != 0 || name.match(/^[A-Z a-z.]{2,}$/)))
+    if ((typeof name == "string" && name.trim().length != 0 && name.match(/^[A-Z a-z]{2,}$/)))
         return true
     return false
 };
 //-------------------------------reviews----------------------------
 const isValidReviews = (review) => {
     const rev = review.trim()
-    if (typeof rev == "Number" && rev.match(/^[ 0-9 ]{1,}$/))
+    if (typeof rev == "string" && rev.trim().length != 0)
         return true
     return false
 }
@@ -64,7 +64,7 @@ const isValidIsbn = (value) => {
         return true
     return false
 }
-//=========================================body checking =================================>
+//=============================body checking =================================>
 const isValidBody = function (value) {
     if (typeof value === "undefined" || value === null) return false;
     if (typeof value === "string" && value.trim().length === 0) return false;
