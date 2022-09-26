@@ -320,7 +320,6 @@ const deleteBookById = async (req, res) => {
   catch (err) {
     res.status(500).send({ status: false, error: err.message })
   }
-
 }
 
 
