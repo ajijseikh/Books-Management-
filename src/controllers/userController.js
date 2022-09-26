@@ -25,7 +25,7 @@ const createUser = async (req, res) => {
       return res.status(400).send({ status: false, message: "title is  mandatory" });
 
     if (isValidEnum(title))
-      return res.status(400).send({ status: false, msg: "Title should be of Mr/Mrs/Miss" });
+      return res.status(400).send({ status: false, msg: "Title should be from enum [ Mr/Mrs/Miss]" });
 
     if (!name)
       return res.status(400).send({ status: false, message: "name is  mandatory" });
@@ -48,7 +48,7 @@ const createUser = async (req, res) => {
       return res.status(400).send({ status: false, message: "Phone is  mandatory" });
     
     if (!email)
-      return res.status(400).send({ status: false, message: "email is  mandatory" });
+      return res.status(400).send({ status: false, message: "Email is  mandatory" });
 
     if (!isValidEmail(email))
       return res.status(400).send({ status: false, msg: `your Email-Id '${email}' is invalid` });

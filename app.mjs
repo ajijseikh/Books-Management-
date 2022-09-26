@@ -22,5 +22,5 @@ mongoose.connect(URI, {
     .catch(err => console.log(err.message))
 
 app.use('/', route)
-app.use((req, res) => res.status(400).send({ status: false, message: 'Invalid URL' }))
+app.use((req, res) => res.status(400).send({ status: false, message: 'Invalid URL Please Check' }))
 app.listen(PORT, () => console.log(`Express app is running on port ${PORT}`))

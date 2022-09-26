@@ -13,12 +13,15 @@ const addReview = async (req, res) => {
 
         let datas = req.body
 
-        let { reviewedBy, reviewedAt, rating, review } = datas
+        let { bookId,reviewedBy, reviewedAt, rating, review } = datas
 
         if (!validate.isMongoId(id))
-            return res.status(400).send({ status: false, message: `This BookId '${id}' is Invalid` })
+            return res.status(400).send({ status: false, message: `This BookId '${id}' given in param is Invalid` })
 
-        let findBook = await bookModel.findById(id)
+        if(!validate.isMongoId(bookId))
+            return res.status(400).send({ status: false, message: `This BookId '${bookId}' in the body is Invalid` })
+        
+            let findBook = await bookModel.findById(id)
 
         if (!findBook)
             return res.status(404).send({ status: false, message: `Book Not Found` })
