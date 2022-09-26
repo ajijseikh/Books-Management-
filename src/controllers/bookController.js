@@ -295,14 +295,21 @@ const updateBookById = async (req, res) => {
 const deleteBookById = async (req, res) => {
   try {
     const bookId = req.params.bookId;
+
     if (!bookId)
-      return res.status(400).send({ status: false, message: 'Please enter bookId' })
+      return res.status(400).send({ status: false, message: 'Please enter bookId' });
 
-    //-------------------finding Book by id through params-------------------
-    const book = await bookModel.findById(bookId)
+    if (!isValidObjectId(bookId))
+      return res.status(400).send({ status: false, message: `Book Id ${bookId} in params is Invalid` })
 
-    if (!book || book.isDeleted === true)
-      return res.status(400).send({ status: false, message: 'No book exits' })
+    //-------------------finding Book by id through params----------------------
+    const book = await bookModel.findOne({ _id: bookId });
+
+    if (!book)
+      return res.status(404).send({ status: false, message: "Book not found" });
+
+    if (book.isDeleted === true)
+      return res.status(400).send({ status: false, message: `This '${bookId}' book is already deleted.` })
 
     //--------------------------------deleting Book by id-------------------------------------
     const deletedBook = await bookModel.findByIdAndUpdate({ _id: bookId }, { $set: { isDeleted: true } }, { new: true })
@@ -313,7 +320,6 @@ const deleteBookById = async (req, res) => {
   catch (err) {
     res.status(500).send({ status: false, error: err.message })
   }
-
 }
 
 
