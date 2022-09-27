@@ -1,6 +1,6 @@
 import userModel from "../models/userModel.js";
 import jwt from "jsonwebtoken";
-import bcrypt from 'bcrypt';
+//import bcrypt from 'bcrypt';
 import {
   isValidBody,
   isValidEnum,
@@ -25,7 +25,7 @@ const createUser = async (req, res) => {
       return res.status(400).send({ status: false, message: "title is  mandatory" });
 
     if (isValidEnum(title))
-      return res.status(400).send({ status: false, msg: "Title should be of Mr/Mrs/Miss" });
+      return res.status(400).send({ status: false, msg: "Title should be from enum [ Mr/Mrs/Miss]" });
 
     if (!name)
       return res.status(400).send({ status: false, message: "name is  mandatory" });
@@ -48,7 +48,7 @@ const createUser = async (req, res) => {
       return res.status(400).send({ status: false, message: "Phone is  mandatory" });
     
     if (!email)
-      return res.status(400).send({ status: false, message: "email is  mandatory" });
+      return res.status(400).send({ status: false, message: "Email is  mandatory" });
 
     if (!isValidEmail(email))
       return res.status(400).send({ status: false, msg: `your Email-Id '${email}' is invalid` });
@@ -119,7 +119,7 @@ const userLogin = async (req, res) => {
     const payload = { userId: user._id, iat: Math.floor(Date.now() / 1000) };
     const token = jwt.sign(payload, "group56", { expiresIn: "24h" });
 
-    return res.status(200).send({ status: true, message: "Login Successfully", token: token, exp: payload.exp, });
+    return res.status(200).send({ status: true, message: "Login Successfully", data: token, exp: payload.exp, });
 
   } catch (err) {
     res.status(500).send({ status: false, message: err.message });

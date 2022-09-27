@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import moment from 'moment'
 
 // ------------dataValidation-----------
 const dataValidation = (data) => {
@@ -39,7 +40,12 @@ const isValidTitleEnum = (title) => {
 
 //---------------------------------------validText-------------------------------------------
 const isValidText = (text) => {
-    if (typeof text == "string" && text.trim().length != 0 && text.match(/^[a-z A-Z 0-9,.?]{2,}$/i))
+    if (typeof text == "string" && text.trim().length != 0 && text.match(/^[a-z A-Z 0-9,.-?]{2,}$/i))
+        return true
+    return false
+}
+const isTitleAny= (text) => {
+    if (typeof text == "string" && text.trim().length != 0 && text.match(/^[a-z A-Z 0-9,.-?]{2,}$/i)) 
         return true
     return false
 }
@@ -71,9 +77,10 @@ const isValidBody = function (value) {
     return true;
 }
 
-const isValidDate = (date) => {
-    const regx = /^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/
-    return regx.test(date)
+const isValidDate = (reviewedAt) => {
+    let value = reviewedAt;
+    let check = moment(value,'YYYY-MM-DD', true).isValid();
+            return check
 };
 
 const isValidRating = (rating) => {
@@ -82,6 +89,17 @@ const isValidRating = (rating) => {
         return false
     return true
 }
+
+const isValidTitle = (title)=>{
+    var firstChar = title.substring(0, 1);
+
+if (firstChar == firstChar.toUpperCase()) 
+return false
+return true
+    
+
+}
+
 export {
     dataValidation,
     isValidObjectId,
@@ -95,5 +113,7 @@ export {
     isValidIsbn,
     isValidBody,
     isValidDate,
-    isValidRating
+    isValidTitle,
+    isValidRating,
+    isTitleAny
 }
